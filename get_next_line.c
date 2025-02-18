@@ -11,23 +11,38 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
-char *get_next_line(int fd)
+
+/*char *get_next_line(int fd)
 {
 
 }
+*/
 
-int	main(void)
+#include <stdio.h>
+int	main(int argc, char **argv)
 {
 	int	fd;
-	char *str;
+	char content[100];
+	char *name_file = "test";
+	//char *str;
 
+	if(argc > 2)
+	{
+		printf("ERROR_PARAMETERS");
+		return (1);
+	}
+	fd = open(name_file, O_RDONLY|O_CREAT);
+	if(argc == 1)
+		sprintf(content, "echo Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum. > %s", name_file);
+	else
+		sprintf(content, "echo %s > %s", argv[1], name_file);
+	system(content);
 	str = get_next_line(fd);
 	while(str != NULL)
 	{
-		fd = open("test.txt", O_RDONLY|O_CREAT);
 		str = get_next_line(fd);
 		printf("%s", str);
 	}
+	system("rm -rf test");
 	return (0);
 }
