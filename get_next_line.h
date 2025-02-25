@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 5
+#  define BUFFER_SIZE 100
 # endif
 
 typedef	struct s_node
@@ -28,7 +28,7 @@ typedef	struct s_node
 # include <fcntl.h>
 # include <stdlib.h>
 
-char *get_next_line(int fd);
+char	*get_next_line(int fd);
 void	ft_bzero(void *s, size_t n);
 
 #endif
