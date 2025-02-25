@@ -25,3 +25,19 @@ void	ft_bzero(void *s, size_t n)
 		i++;
 	}
 }
+#include <stdio.h>
+void	switch_node(t_node **list, int node_count)
+{
+	t_node	*first_node;	
+	t_node	*current_node;
+
+	first_node = *list;
+	(void)first_node;
+	current_node = *list;
+	while(node_count > 0)
+	{
+		current_node = current_node->next;
+		node_count--;
+	}
+	printf("str: %s\n", current_node->str);
+}

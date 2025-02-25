@@ -70,7 +70,7 @@ int	create_node_list(t_node **node, int fd, int *count)
 	return (0);
 }
 
-char *fill_str(int count, t_node *current_node)
+char *fill_str(int count, t_node *current_node, int *node_count)
 {
 	char *str_tmp;
 	int	i;
@@ -78,13 +78,18 @@ char *fill_str(int count, t_node *current_node)
 
 	j = 0;
 	str_tmp = malloc(sizeof(char) * (BUFFER_SIZE * count) + 2);
+	if(!str_tmp)
+		return (NULL);
 	while(current_node)	
 	{
 		i = 0;
 		while(current_node->str[i] && current_node->str[i] != '\n')
 			str_tmp[j++] = current_node->str[i++];
 		if(current_node->str[i] == '\n')
+		{
+			*node_count = i;
 			break;
+		}
 		current_node = current_node->next;
 	}
 	str_tmp[j] = '\n';
@@ -97,20 +102,22 @@ char *get_next_line(int fd)
 	static t_node	*heap = NULL;
 	char *str_return;
 	int	count;
+	int	node_count;
 
 	if(!fd || fd < 0 || BUFFER_SIZE <= 0 || read(fd, NULL, 0))
 		return (NULL);
 	count = 0;
+	node_count = 0;
 	if(create_node_list(&heap, fd, &count))
 		return (NULL);
-	str_return = fill_str(count, heap);
+	str_return = fill_str(count, heap, &node_count);
+	switch_node(&heap, node_count);
 	//print_node(heap);
 	//free_list(&heap);
-	free(heap);
+//	free(heap);
 	return (str_return);
 }
 
-//#include <stdio.h>
 int	main()
 {
 	int	fd;
