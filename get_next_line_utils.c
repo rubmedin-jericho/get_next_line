@@ -14,12 +14,12 @@
 
 void	ft_bzero(void *s, size_t n)
 {
-	int		i;
+	size_t		i;
 	char	*str;
 
 	str = (char *)s;
 	i = 0;
-	while (i < (int)n)
+	while (i < n)
 	{
 		str[i] = 0;
 		i++;
@@ -32,12 +32,10 @@ void	switch_node(t_node **list, int node_count)
 	t_node	*current_node;
 
 	first_node = *list;
-	(void)first_node;
 	current_node = *list;
 	while(node_count > 0)
-	{
+	{	
 		current_node = current_node->next;
 		node_count--;
 	}
-	printf("str: %s\n", current_node->str);
 }
