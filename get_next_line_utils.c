@@ -25,12 +25,27 @@ void	ft_bzero(void *s, size_t n)
 		i++;
 	}
 }
+
+void	free_list(t_node *node)
+{
+	t_node *tmp_node;
+	
+	while(node)
+	{
+		tmp_node = node;
+		node = node->next;
+		free(tmp_node);
+	}
+}
+
 #include <stdio.h>
 void	switch_node(t_node **list, int node_count)
 {
-	t_node	*first_node;	
+	t_node	*first_node;
+	t_node	*tmp_node;	
 	t_node	*current_node;
 
+	tmp_node = *list;
 	first_node = *list;
 	current_node = *list;
 	while(node_count > 0)
@@ -38,4 +53,9 @@ void	switch_node(t_node **list, int node_count)
 		current_node = current_node->next;
 		node_count--;
 	}
+	while((tmp_node->next)->str != current_node->str)
+		tmp_node = tmp_node->next;
+	tmp_node->next = NULL;
+	*list = current_node;
+	free_list(first_node);
 }

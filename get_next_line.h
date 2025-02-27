@@ -13,13 +13,13 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 5
 
 # endif
 
 typedef	struct s_node
 {
-	char str[BUFFER_SIZE + 1];
+	char *str;
 	struct s_node *next;
 }		t_node;
 

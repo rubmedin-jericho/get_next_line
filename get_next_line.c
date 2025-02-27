@@ -35,6 +35,7 @@ t_node	*create_node(char *words)
 
 	i = 0;
 	new_node = malloc(sizeof(t_node));
+	new_node->str = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if(!new_node)
 		return NULL;
 	while(words[i] && i < BUFFER_SIZE)
@@ -55,13 +56,15 @@ int	create_node_list(t_node **node, int fd, int *count)
 	t_node	*new_node;
 
 	buff_tmp = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if(!buff_tmp)
+		return (-1);
 	ft_bzero(buff_tmp, BUFFER_SIZE);
 	nbr_read = 1;
 	while(nbr_read > 0)
 	{			
 		nbr_read = read(fd, buff_tmp, BUFFER_SIZE);
 		if(nbr_read == -1)
-			return (1);
+			return (-1);
 		buff_tmp[nbr_read] = '\0';
 		new_node = create_node(buff_tmp);	
 		insert_node(node, new_node);
@@ -84,16 +87,26 @@ char *fill_str(int count, t_node *current_node, int *node_count)
 	while(current_node)	
 	{
 		i = 0;
-		*node_count += 1;
 		while(current_node->str[i] && current_node->str[i] != '\n')
 			str_tmp[j++] = current_node->str[i++];
 		if(current_node->str[i] == '\n')
 			break;
+		*node_count += 1;
 		current_node = current_node->next;
 	}
+	current_node->str = &current_node->str[i + 1];
 	str_tmp[j] = '\n';
 	str_tmp[++j] = '\0';
 	return (str_tmp);
+}
+
+void	print_node(t_node *node)
+{
+	while(node != NULL)	
+	{
+		printf("str_2: %s\n", node->str);
+		node = node->next;
+	}
 }
 
 char *get_next_line(int fd)
@@ -109,12 +122,11 @@ char *get_next_line(int fd)
 	node_count = 0;
 	if(create_node_list(&heap, fd, &count))
 		return (NULL);
-	printf("BUFFER_SIZE: %i\n", BUFFER_SIZE);
+//	printf("BUFFER_SIZE: %i\n", BUFFER_SIZE);
 	str_return = fill_str(count, heap, &node_count);
-	if(node_count > 0)
-		switch_node(&heap, node_count);
-	//print_node(heap);
-	//free_list(&heap);
+//	if(node_count > 0)
+	switch_node(&heap, node_count);
+//	free_list(&heap);
 //	free(heap);
 	return (str_return);
 }
@@ -126,9 +138,17 @@ int	main()
 	
 	fd = open("test", O_RDONLY);
 	str = get_next_line(fd);
-	printf("str: %s", str);
-//	str = get_next_line(fd);
-//	printf("str: %s", str);
+	printf("str_1: %s", str);
+	str = get_next_line(fd);
+	printf("str_2: %s", str);
+	str = get_next_line(fd);
+	printf("str_1: %s", str);
+	str = get_next_line(fd);
+	printf("str_2: %s", str);
+	str = get_next_line(fd);
+	printf("str_1: %s", str);
+	str = get_next_line(fd);
+	printf("str_2: %s", str);
 	return (0);
 }
 
