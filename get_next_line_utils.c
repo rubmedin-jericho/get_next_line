@@ -34,6 +34,7 @@ void	free_list(t_node *node)
 	{
 		tmp_node = node;
 		node = node->next;
+		free(tmp_node->str);
 		free(tmp_node);
 	}
 }

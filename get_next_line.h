@@ -31,4 +31,5 @@ typedef	struct s_node
 char	*get_next_line(int fd);
 void	ft_bzero(void *s, size_t n);
 void	switch_node(t_node **list, int node_count);
+void	free_list(t_node *node);
 #endif
