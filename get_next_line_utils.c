@@ -49,18 +49,13 @@ void	switch_node(t_node **list, int node_count)
 	tmp_node = *list;
 	first_node = *list;
 	current_node = *list;
-	printf("first_node: %s\n", first_node->str);
 	while(node_count > 0)
 	{	
-		printf("current: %s\n", current_node->str);
 		current_node = current_node->next;
 		node_count--;
 	}
 	while((tmp_node->next)->str != current_node->str)
-	{
-		printf("tmp_node: %s\n", tmp_node->str);
 		tmp_node = tmp_node->next;
-	}
 	tmp_node->next = NULL;
 	*list = current_node;
 	free_list(first_node);

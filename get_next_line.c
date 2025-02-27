@@ -68,9 +68,12 @@ int	create_node_list(t_node **node, int fd, int *count)
 		if(nbr_read == -1)
 			return (-1);
 		buff_tmp[nbr_read] = '\0';
-		new_node = create_node(buff_tmp);	
-		insert_node(node, new_node);
-		*count += 1;
+		if(buff_tmp[0] != '\0')
+		{
+			new_node = create_node(buff_tmp);	
+			insert_node(node, new_node);
+			*count += 1;
+		}
 		i++;
 	}
 	return (0);
@@ -86,7 +89,7 @@ char *fill_str(int count, t_node *current_node, int *node_count)
 	str_tmp = malloc(sizeof(char) * (BUFFER_SIZE * count) + 2);
 	if(!str_tmp)
 		return (NULL);
-	while(current_node || current_node->str[0] != '\0')	
+	while(current_node /*|| current_node->str[0] != '\0'*/)	
 	{
 		i = 0;
 		while(current_node->str[i] && current_node->str[i] != '\n')
@@ -96,7 +99,8 @@ char *fill_str(int count, t_node *current_node, int *node_count)
 		*node_count += 1;
 		current_node = current_node->next;
 	}
-	current_node->str = &current_node->str[i + 1];
+	if(current_node->str[i + 1] != '\0')
+		current_node->str = &current_node->str[i + 1];
 	str_tmp[j] = '\n';
 	str_tmp[++j] = '\0';
 	return (str_tmp);
@@ -122,7 +126,7 @@ char *get_next_line(int fd)
 		return (NULL);
 	count = 0;
 	node_count = 0;
-	if(!heap || heap->str[0] == '\0')
+	if(!heap)
 	{
 		if(create_node_list(&heap, fd, &count) < 0)
 		{
@@ -131,20 +135,24 @@ char *get_next_line(int fd)
 		}
 	}
 	str_return = fill_str(count, heap, &node_count);
-	switch_node(&heap, node_count);
+	if(node_count != 0)
+		switch_node(&heap, node_count);	
+	else
+		return (NULL);
 	return (str_return);
 }
 
 int	main()
 {
 	int	fd;
-	char *str = "d";
+	char *str;
 	
 	fd = open("test", O_RDONLY);
+	str = get_next_line(fd);
 	while(str != NULL)
 	{
-		str = get_next_line(fd);
 		printf("str_1: %s", str);
+		str = get_next_line(fd);
 	}
 	return (0);
 }
