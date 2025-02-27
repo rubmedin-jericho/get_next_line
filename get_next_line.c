@@ -86,7 +86,7 @@ char *fill_str(int count, t_node *current_node, int *node_count)
 	str_tmp = malloc(sizeof(char) * (BUFFER_SIZE * count) + 2);
 	if(!str_tmp)
 		return (NULL);
-	while(current_node)	
+	while(current_node || current_node->str[0] != '\0')	
 	{
 		i = 0;
 		while(current_node->str[i] && current_node->str[i] != '\n')
@@ -106,7 +106,7 @@ void	print_node(t_node *node)
 {
 	while(node != NULL)	
 	{
-		printf("str_2: %s\n", node->str);
+		printf("\n<------------str_2: %s------------->\n", node->str);
 		node = node->next;
 	}
 }
@@ -122,10 +122,13 @@ char *get_next_line(int fd)
 		return (NULL);
 	count = 0;
 	node_count = 0;
-	if(create_node_list(&heap, fd, &count) < 0)
+	if(!heap || heap->str[0] == '\0')
 	{
-		free_list(heap);
-		return (NULL);
+		if(create_node_list(&heap, fd, &count) < 0)
+		{
+			free_list(heap);
+			return (NULL);
+		}
 	}
 	str_return = fill_str(count, heap, &node_count);
 	switch_node(&heap, node_count);
@@ -135,15 +138,13 @@ char *get_next_line(int fd)
 int	main()
 {
 	int	fd;
-	char *str;
+	char *str = "d";
 	
 	fd = open("test", O_RDONLY);
-	str = get_next_line(fd);
-	printf("str_1: %s", str);
 	while(str != NULL)
 	{
-		printf("str_1: %s", str);
 		str = get_next_line(fd);
+		printf("str_1: %s", str);
 	}
 	return (0);
 }
