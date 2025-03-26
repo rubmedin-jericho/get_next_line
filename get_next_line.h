@@ -7,5 +7,8 @@
 
 #include <stdlib.h>
 #include <fcntl.h>
+
 char *get_next_line(int fd);
+int	fill_buff(int fd, char **buff, int *count_read);
+
 #endif
