@@ -13,22 +13,44 @@
 #include "get_next_line.h"
 
 //puede fallar por la condicion del while(count_read > 0) si falla arreglar mas adelante.
-void	fill_buff(int fd, char **buff_tmp, int *count_read)
+int	fill_buff_tmp(int fd, char **buff_tmp, int *count_read)
 {
-	char *str_tmp;
-	int	count_read;
-
-	count_read = 0;
-	*buff_tmp = malloc(sizeof(char) * BUFFER_SIZE + 1)
+	*count_read = 0;
+	*buff_tmp = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if(!(*buff_tmp))
-		return NULL;
+		return (1);
 	*count_read = read(fd, *buff_tmp, BUFFER_SIZE);
-	(*buff_tmp)[count_read] = '\0';
+	if(*count_read < 0)
+		return (1);
+	(*buff_tmp)[*count_read] = '\0';
+	return (0);
 }
 
-void	cpy_str()
+int	cpy_str(char **buff_static, char *buff_tmp, char **buff_return)
 {
+	int	i;
+	int	j;
 
+	i = 0;
+	(*buff_static) = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if(!(*buff_static))
+		return (1);
+	(*buff_return) = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if(!(*buff_return))
+		return (1);
+	while(buff_tmp[i] && buff_tmp[i] != '\n' && i < BUFFER_SIZE)
+	{
+		(*buff_return)[i] = buff_tmp[i];
+		i++;
+	}
+	if(buff_tmp[i] == '\n')
+		(*buff_return)[i++] = '\n';
+	j = 0;
+	while(buff_tmp[i] && i < BUFFER_SIZE)
+		(*buff_static)[j++] = buff_tmp[i++];
+	(*buff_return)[i] = '\0';
+	(*buff_static)[j] = '\0';
+	return (0);
 }
 
 void	cut_str(char *buff_static, char *buff)

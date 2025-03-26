@@ -19,18 +19,14 @@ char *get_next_line(int fd)
 	char		*buff_return;
 	int			count_read;
 
+
 	if(!fd || fd < 0 || BUFFER_SIZE <= 0 || read(fd, NULL, 0))
 		return (NULL);	
-	if(fill_buff(fd, &buff_tmp, &count_read))
+	if(fill_buff_tmp(fd, &buff_tmp, &count_read))
 		return (NULL);
-	
-	//if(!buff_static)
-	//	cut_str(&buff_static, buff, count_read);
-	//else
-	//{
-	//	
-	//}
-
+	if(cpy_str(&buff_static, buff_tmp, &buff_return))
+		return (NULL);
+	return (buff_return);
 }
 
 #include <stdio.h>
@@ -44,7 +40,7 @@ int	main()
 	str = get_next_line(fd);
 	while(str != NULL)
 	{
-		printf("str_1: %s", str);
+		printf("%s", str);
 		str = get_next_line(fd);
 	}
 	return (0);
