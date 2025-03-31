@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 char *get_next_line(int fd)
 {
@@ -20,12 +21,19 @@ char *get_next_line(int fd)
 	int			count_read;
 
 
-	if(!fd || fd < 0 || BUFFER_SIZE <= 0 || read(fd, NULL, 0))
+	if(BUFFER_SIZE < 0 || read(fd, NULL, 0))
 		return (NULL);	
-	if(fill_buff_tmp(fd, &buff_tmp, &count_read))
-		return (NULL);
-	if(cpy_str(&buff_static, buff_tmp, &buff_return))
-		return (NULL);
+	if(buff_static != NULL)
+		buff_static_cpy(&buff_static, &buff_return);	
+	else
+	{
+		if(fill_buff_tmp(fd, &buff_tmp, &count_read))
+			return (NULL);
+		if(cpy_str(&buff_static, buff_tmp, &buff_return))
+			return (NULL);
+		if(count_read == 0)
+			return (NULL);
+	}
 	return (buff_return);
 }
 

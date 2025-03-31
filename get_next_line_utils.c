@@ -26,6 +26,27 @@ int	fill_buff_tmp(int fd, char **buff_tmp, int *count_read)
 	return (0);
 }
 
+void buff_static_cpy(char **buff_static, char **buff_return)
+{
+	int i;
+
+	(*buff_static) = malloc(sizeof(char ) * (BUFFER_SIZE + 1));
+	if((*buff_static == NULL))
+		return (NULL);
+	(*buff_return) = malloc(sizeof(char ) * (BUFFER_SIZE + 1));
+	if((*buff_return == NULL))
+		return (NULL);
+	i = 0;
+	while((*buff_static)[i] && (*buff_static)[i] != '\n')
+	{
+		(*buff_return)[i] == (*buff_static)[i];
+		i++;
+	}
+	(*buff_return)[i++] == '\n';
+	(*buff_return)[i] == '\0';
+	free(buff_static);
+}
+
 int	cpy_str(char **buff_static, char *buff_tmp, char **buff_return)
 {
 	int	i;
@@ -51,23 +72,4 @@ int	cpy_str(char **buff_static, char *buff_tmp, char **buff_return)
 	(*buff_return)[i] = '\0';
 	(*buff_static)[j] = '\0';
 	return (0);
-}
-
-void	cut_str(char *buff_static, char *buff)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while(buff[i] && buff[i] != '\n')
-		i++;
-	if(i < BUFFER_SIZE)
-	{
-		j = 0;
-		i++;
-		while(buff[i])
-			buff_static[j++] = buff[i++];
-		buff_static[j] = '\n';
-		buff_static[j++] = '\0';
-	}
 }
