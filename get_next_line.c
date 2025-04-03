@@ -13,31 +13,28 @@
 #include "get_next_line.h"
 #include <stdio.h>
 
+char *free_str(char **buff_str)
+{
+	free((*buff_str));
+	(*buff_str) = NULL;
+	return (NULL);
+}
+
 char *get_next_line(int fd)
 {
 	static char	*buff_static = NULL;
-	char		*buff_tmp;
 	char		*buff_return;
-	int			count_read;
+	int			i;
 
-
-	if(BUFFER_SIZE < 0 || read(fd, NULL, 0))
-		return (NULL);	
-	if(buff_static != NULL)
-		buff_static_cpy(&buff_static, &buff_return);	
-	else
-	{
-		if(fill_buff_tmp(fd, &buff_tmp, &count_read))
-			return (NULL);
-		if(cpy_str(&buff_static, buff_tmp, &buff_return))
-			return (NULL);
-		if(count_read == 0)
-			return (NULL);
-	}
+	if(BUFFER_SIZE <= 0 || fd < 0)
+		return (NULL);
+	buff_return = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if(!buff_return)
+		return (NULL);
+	if(!buff_static)
+		fill_str(&buff_return, fd);
 	return (buff_return);
 }
-
-#include <stdio.h>
 
 int	main()
 {
@@ -48,7 +45,7 @@ int	main()
 	str = get_next_line(fd);
 	while(str != NULL)
 	{
-		printf("%s", str);
+		printf("Line: %s", str);
 		str = get_next_line(fd);
 	}
 	return (0);
